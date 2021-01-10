@@ -8,14 +8,18 @@ import 'Global.dart';
 import 'User.dart';
 
 
-
-class ArticleDetails extends StatelessWidget {
+class ArticleDetails extends StatefulWidget{
   ArticleDetails(this.article);
   final Article article;
 
   int _currentIndex = 0;
   List cardList = [];
 
+  @override
+  ArticleDetailsState createState() => new ArticleDetailsState();
+}
+
+class ArticleDetailsState extends State<ArticleDetails> {
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -26,13 +30,14 @@ class ArticleDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    for (var i = 0; i < 4; i++) {
-      cardList.add(Container(
-        margin: EdgeInsets.all(3.0),
+    widget.cardList.clear();
+    for (var i = 0; i < widget.article.urls.length; i++) {
+      widget.cardList.add(Container(
+        margin: EdgeInsets.all(2.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           image: DecorationImage(
-            image: NetworkImage(article.url),
+            image: NetworkImage(widget.article.urls[i]),
             fit: BoxFit.cover,
           ),
         ),
@@ -50,7 +55,7 @@ class ArticleDetails extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text(
-                  article.title,
+                  widget.article.title,
                   textAlign: TextAlign.center,
                   style: new TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold)
@@ -58,17 +63,21 @@ class ArticleDetails extends StatelessWidget {
               CarouselSlider(
                 options: CarouselOptions(
                   height: 400.0,
-                  autoPlay: true,
+                  autoPlay: widget.cardList.length > 1 ? true : false,
                   autoPlayInterval: Duration(seconds: 3),
                   autoPlayAnimationDuration: Duration(milliseconds: 800),
                   autoPlayCurve: Curves.fastOutSlowIn,
                   pauseAutoPlayOnTouch: true,
                   aspectRatio: 2.0,
                   onPageChanged: (index, reason) {
-                    _currentIndex = index;
+                    //widget._currentIndex = index;
+                    //print(index);
+                    setState(() {
+                      widget._currentIndex = index;
+                    });
                   },
                 ),
-                items: cardList.map((card) {
+                items: widget.cardList.map((card) {
                   return Builder(
                       builder: (BuildContext context) {
                         return Container(
@@ -89,9 +98,9 @@ class ArticleDetails extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              Row(
+              Row( //LIGNE DE POINTS
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: map<Widget>(cardList, (index, url) {
+                children: map<Widget>(widget.cardList, (index, url) {
                   return Container(
                     width: 10.0,
                     height: 10.0,
@@ -99,18 +108,17 @@ class ArticleDetails extends StatelessWidget {
                         vertical: 10.0, horizontal: 2.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentIndex == index ? Colors.blueAccent : Colors
-                          .grey,
+                      color: widget._currentIndex == index ? Colors.blueAccent : Colors.grey,
                     ),
                   );
                 }),
               ),
               Text(
-                  article.size + " - " + article.seller,
+                  widget.article.size + " - " + widget.article.seller,
                   style: new TextStyle(fontSize: 16.0,)
               ),
               Text(
-                  article.price.toString() + " €",
+                  widget.article.price.toString() + " €",
                   style: new TextStyle(
                       fontSize: 16.0, fontWeight: FontWeight.bold)
               ),
@@ -124,7 +132,7 @@ class ArticleDetails extends StatelessWidget {
                           style: new TextStyle(
                               fontSize: 20.0, color: Colors.white)),
                       onPressed: () async {
-                        await addToBasket(Global.user, article);
+                        await addToBasket(Global.user, widget.article);
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
                       }
                   ))

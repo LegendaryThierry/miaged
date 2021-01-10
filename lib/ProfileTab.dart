@@ -85,6 +85,14 @@ class ProfileTabState extends State<ProfileTab>{
           key: _formKey,
           child : Column(
             children: <Widget>[
+              SizedBox(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: 200.0,
+                child: Image.network(Global.user.backgroundImage, fit: BoxFit.cover),
+              ),
               TextFormField(
                 controller: loginController,
                 decoration: const InputDecoration(

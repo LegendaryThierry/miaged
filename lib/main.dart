@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((value){
           if(value.size == 1){
             List<QueryDocumentSnapshot> docs = value.docs;
-            Global.user = new User(docs[0].id, docs[0]["login"], docs[0]["password"], docs[0]["birthday"], docs[0]["address"], docs[0]["postalCode"], docs[0]["city"]);
+            Global.user = new User(docs[0].id, docs[0]["login"], docs[0]["password"], docs[0]["birthday"], docs[0]["address"], docs[0]["postalCode"], docs[0]["city"], docs[0]["backgroundImage"]);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MainContainer(Global.user)),
@@ -237,7 +237,7 @@ void createArticle(Article article) {
         "seller": article.seller,
         "price": article.price,
         "size": article.size,
-        "url": article.url
+        "url1": article.urls[0]
       })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));

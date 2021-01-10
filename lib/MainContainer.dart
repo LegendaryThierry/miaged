@@ -24,16 +24,14 @@ class MainContainer extends StatefulWidget {
 class MainContainerState extends State<MainContainer>{
   Future<bool> getData() async {
     await getArticles().then((data) {
-      setState(() {
         widget.articles = data;
-      });
     });
 
     await getBasket(widget.user, widget.articles).then((data) {
-      setState(() {
         widget.basket = data;
-      });
     });
+
+    //PAS BESOIN D'UN SETSTATE PUISQU'ON UTILISE UN FUTUREBUILDER
 
     return true;
   }
@@ -46,6 +44,7 @@ class MainContainerState extends State<MainContainer>{
     task = getData();
   }
 
+  //Fonction de callback pour être notifié lorsqu'un article est supprimé du panier.
   callback(newBasket) {
     setState(() {
       widget.basket = newBasket;
@@ -66,7 +65,7 @@ class MainContainerState extends State<MainContainer>{
     return FutureBuilder(
       future: task,
       builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.done){
+        if(snapshot.data == true){
           return display();
         }
         else{
@@ -127,8 +126,17 @@ Future<List<Article>> getArticles() async {
       .get()
       .then((QuerySnapshot querySnapshot) => {
     querySnapshot.docs.forEach((doc) {
-      print("----- YOLO -----");
-      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], doc["url"]));
+      List<String> urls = new List<String>();
+
+      for(int i=1; i<=4; i++){
+        if(doc.data().containsKey("url" + i.toString())){ //On test si la clé url1, url2, url3 ou url4 existe pour ce document
+          if(doc["url" + i.toString()] != ""){
+            urls.add(doc["url" + i.toString()]);
+          }
+        }
+      }
+
+      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], urls));
     })
   });
 

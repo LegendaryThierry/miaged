@@ -35,14 +35,14 @@ class ArticleCard extends StatelessWidget{
                     ),
                   ),
                   Image.network(
-                      article.url,
+                      article.urls[0],
                       width: 150,
                       height: 200
                   ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: Text(
-                      article.price.toString() + " €",
+                      article.price.toStringAsFixed(2) + " €",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20

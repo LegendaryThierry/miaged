@@ -4,7 +4,7 @@ class Article{
   String seller;
   double price;
   String size;
-  String url;
+  List<String> urls;
 
-  Article(this.id, this.title, this.seller, this.price, this.size, this.url);
+  Article(this.id, this.title, this.seller, this.price, this.size, this.urls);
 }
