@@ -9,6 +9,7 @@ import 'Global.dart';
 import 'MainContainer.dart';
 import 'Article.dart';
 import 'User.dart';
+import 'SignUp.dart';
 
 List<Article> articles = [];
 List<Article> basket = [];
@@ -67,32 +68,6 @@ const List<Key> keys = [
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController loginController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
-
-  void createUser() {
-    FirebaseFirestore.instance.collection("users")
-        .add({
-          'address': "2 rue Auguste Lechesne",
-          'birthday': "27/05/2000",
-          "login": "thierry.tsang@etu.unice.fr",
-          "city": "CAEN",
-          "password": "123456",
-          "postalCode": "14000"
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
-
-    // ----- Ajouter en spécifiant le nom du document -----
-    // return await FirebaseFirestore.instance.collection("users")
-    //     .doc("user2")
-    //     .set({
-    //   'address': "6 rue Auguste Lechesne",
-    //   'birthday': "27/05/2000",
-    //   "login": "t.tsang@studielgroup.fr",
-    //   "city": "CAEN",
-    //   "password": "123456",
-    //   "postalCode": "14000"
-    // });
-  }
 
   void login() {
     FirebaseFirestore.instance.collection("users")
@@ -159,73 +134,110 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          SizedBox(
-              width: 300.0,
-              height: 75.0,
-              child: TypewriterAnimatedTextKit(
-                  onTap: () {
-                    print("Tap Event");
-                  },
-                  text: [
-                    "Prêt à faire du tri dans vos placards ?",
-                    "Prêt à donner une seconde vie à vos produits ?",
-                    "Prêt à gagner de l'argent ?",
-                    "MIAGED le bon coin de l'élite"
-                  ],
-                  textStyle: TextStyle(
-                      fontSize: 22.0,
-                      fontFamily: "Horizon",
-                      color: Color.fromRGBO(0, 0, 0, 1)
-                  ),
-                  textAlign: TextAlign.center,
-                  alignment: AlignmentDirectional.center // or Alignment.topLeft
+      body: SingleChildScrollView(
+        child: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  margin: const EdgeInsets.only(top: 100.0, bottom: 10),
+                  child: RichText(
+                    text: new TextSpan(
+                      // Note: Styles for TextSpans must be explicitly defined.
+                      // Child text spans will inherit styles from parent
+                      style: new TextStyle(
+                          fontSize: 50.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'M'),
+                        new TextSpan(text: 'I', style: new TextStyle(color: Color.fromRGBO(9, 177, 186, 1))),
+                        new TextSpan(text: 'A', style: new TextStyle(color: Color.fromRGBO(9, 177, 186, 1))),
+                        new TextSpan(text: 'G'),
+                        new TextSpan(text: 'E'),
+                        new TextSpan(text: 'D'),
+                      ],
+                    ),
+                  )
               ),
-            ),
-            Container(
-                margin: const EdgeInsets.all(3.0),
-                width: 300,
-                child: TextField(
-                  controller: loginController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Login',
-                  ),
-                  autofocus: false,
-                  obscureText: false,
-                )
-            ),
-            Container(
-                margin: const EdgeInsets.all(3.0),
-                width: 300,
-                child: TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Password',
-                  ),
-                  autofocus: false,
-                  obscureText: true,
-                )
-            ),
-            MaterialButton(
-              minWidth: 300.0,
-              height: 35,
-              color: Color.fromRGBO(9, 177, 186, 1),
-              child: new Text('Se connecter',
-                  style: new TextStyle(fontSize: 16.0, color: Colors.white)),
-              onPressed: () {
-                login();
-              }
-            )
-          ],
+              SizedBox(
+                width: 300.0,
+                height: 75.0,
+                child: TypewriterAnimatedTextKit(
+                    onTap: () {
+                      print("Tap Event");
+                    },
+                    text: [
+                      "Prêt à faire du tri dans vos placards ?",
+                      "Prêt à donner une seconde vie à vos produits ?",
+                      "Prêt à gagner de l'argent ?",
+                      "MIAGED le bon coin de l'élite"
+                    ],
+                    textStyle: TextStyle(
+                        fontSize: 22.0,
+                        fontFamily: "Horizon",
+                        color: Color.fromRGBO(0, 0, 0, 1)
+                    ),
+                    textAlign: TextAlign.center,
+                    alignment: AlignmentDirectional.center // or Alignment.topLeft
+                ),
+              ),
+              Container(
+                  margin: const EdgeInsets.all(3.0),
+                  width: 300,
+                  child: TextField(
+                    controller: loginController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Login',
+                    ),
+                    autofocus: false,
+                    obscureText: false,
+                  )
+              ),
+              Container(
+                  margin: const EdgeInsets.all(3.0),
+                  width: 300,
+                  child: TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Password',
+                    ),
+                    autofocus: false,
+                    obscureText: true,
+                  )
+              ),
+              MaterialButton(
+                  minWidth: 300.0,
+                  height: 35,
+                  color: Color.fromRGBO(9, 177, 186, 1),
+                  child: new Text('Se connecter',
+                      style: new TextStyle(fontSize: 16.0, color: Colors.white)),
+                  onPressed: () {
+                    login();
+                  }
+              ),
+              ButtonTheme(
+                minWidth: 300.0,
+                child:   OutlineButton(
+                  child: Text("S'inscrire", style: TextStyle(color: Color.fromRGBO(9, 177, 186, 1))),
+                  borderSide: BorderSide(color: Color.fromRGBO(9, 177, 186, 1), width: 2),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }

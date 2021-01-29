@@ -7,8 +7,9 @@ import 'MainContainer.dart';
 import 'User.dart';
 
 class ArticleCard extends StatelessWidget{
-  ArticleCard(this.article);
+  ArticleCard(this.article, this.callbackAdd);
   final Article article;
+  Function(Article) callbackAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class ArticleCard extends StatelessWidget{
         onTap: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ArticleDetails(article))
+              MaterialPageRoute(builder: (context) => ArticleDetails(article, callbackAdd))
           );
         },
         child: Container(

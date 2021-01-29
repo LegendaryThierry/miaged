@@ -20,8 +20,9 @@ class ProfileTabState extends State<ProfileTab>{
   TextEditingController passwordController = TextEditingController();
   TextEditingController anniversaireController = TextEditingController();
   TextEditingController adresseController = TextEditingController();
-  TextEditingController codePostaleController = TextEditingController();
+  TextEditingController codePostalController = TextEditingController();
   TextEditingController villeController = TextEditingController();
+  bool _darkMode = false;
 
   @override
   void initState(){
@@ -31,7 +32,7 @@ class ProfileTabState extends State<ProfileTab>{
     passwordController.text = Global.user.password;
     anniversaireController.text = Global.user.birthday;
     adresseController.text = Global.user.address;
-    codePostaleController.text = Global.user.postalCode;
+    codePostalController.text = Global.user.postalCode;
     villeController.text = Global.user.city;
   }
 
@@ -81,113 +82,135 @@ class ProfileTabState extends State<ProfileTab>{
         appBar: AppBar(
           title: Text("MIAGED"),
         ),
-        body: Form(
-          key: _formKey,
-          child : Column(
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                height: 200.0,
-                child: Image.network(Global.user.backgroundImage, fit: BoxFit.cover),
+        body: SingleChildScrollView(
+
+          child: Column(
+            children: [
+              Form(
+                  key: _formKey,
+                  child : Column(
+                      children: <Widget>[
+                        SizedBox(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          height: 200.0,
+                          child: Image.network(Global.user.backgroundImage, fit: BoxFit.cover),
+                        ),
+                        TextFormField(
+                          readOnly: true,
+                          controller: loginController,
+                          decoration: const InputDecoration(
+                              icon: Icon(Icons.person),
+                              hintText: 'Votre adresse email',
+                              labelText: 'Login'
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.lock),
+                            hintText: 'Votre mot de passe',
+                            labelText: 'Password',
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: anniversaireController,
+                          onTap: () => {
+                            FocusScope.of(context).requestFocus(FocusNode()),
+                            datePicker()
+                          },
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.calendar_today),
+                            hintText: "Votre date d'anniversaire",
+                            labelText: 'Anniversaire',
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: adresseController,
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.home),
+                            hintText: 'Votre adresse de résidence',
+                            labelText: 'Adresse',
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: codePostalController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.location_on),
+                            hintText: 'Votre code postal de résidence',
+                            labelText: 'Code Postal',
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: villeController,
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.location_city),
+                            hintText: 'Votre ville de résidence',
+                            labelText: 'Ville',
+                          ),
+                          onSaved: (String value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String value) {
+                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                          },
+                        ),
+                      ]
+                  )
               ),
-              TextFormField(
-                controller: loginController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.person),
-                  hintText: 'Votre adresse email',
-                  labelText: 'Login',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.lock),
-                  hintText: 'Votre mot de passe',
-                  labelText: 'Password',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return value.contains('@') ? 'Do not use the @ char.' : null;
-                },
-              ),
-              TextFormField(
-                controller: anniversaireController,
-                onTap: () => {
-                  FocusScope.of(context).requestFocus(FocusNode()),
-                  datePicker()
-                },
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.calendar_today),
-                  hintText: "Votre date d'anniversaire",
-                  labelText: 'Anniversaire',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return value.contains('@') ? 'Do not use the @ char.' : null;
-                },
-              ),
-              TextFormField(
-                controller: adresseController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.home),
-                  hintText: 'Votre adresse de résidence',
-                  labelText: 'Adresse',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return value.contains('@') ? 'Do not use the @ char.' : null;
-                },
-              ),
-              TextFormField(
-                controller: codePostaleController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.location_on),
-                  hintText: 'Votre code postal de résidence',
-                  labelText: 'Code Postal',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return value.contains('@') ? 'Do not use the @ char.' : null;
-                },
-              ),
-              TextFormField(
-                controller: villeController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.location_city),
-                  hintText: 'Votre ville de résidence',
-                  labelText: 'Ville',
-                ),
-                onSaved: (String value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-                validator: (String value) {
-                  return value.contains('@') ? 'Do not use the @ char.' : null;
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Dark Mode : ", style: TextStyle(fontSize: 15)),
+                  Switch(
+                      value: _darkMode,
+                      onChanged: (value){
+                        setState(() {
+                          _darkMode = value;
+                        });
+                      }
+                  )
+                ],
               ),
               MaterialButton(
                   minWidth: 300.0,
@@ -197,32 +220,32 @@ class ProfileTabState extends State<ProfileTab>{
                       style: new TextStyle(fontSize: 16.0, color: Colors.white)),
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      updateUserData(loginController.text, passwordController.text, anniversaireController.text, adresseController.text, codePostaleController.text, villeController.text);
+                      updateUserData(loginController.text, passwordController.text, anniversaireController.text, adresseController.text, codePostalController.text, villeController.text);
                     }
                   }
               ),
-              Expanded(
+              Container(
                   child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: new Container(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: MaterialButton(
-                        minWidth: 300.0,
-                        height: 35,
-                        color: Color.fromRGBO(213, 0, 0, 1),
-                        child: new Text('Se déconnecter',
-                            style: new TextStyle(fontSize: 16.0, color: Colors.white)),
-                        onPressed: () {
-                          Global.user = null;
-                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MyApp()), (Route<dynamic> route) => false);
-                        }
+                      alignment: Alignment.bottomCenter,
+                      child: new Container(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: MaterialButton(
+                              minWidth: 300.0,
+                              height: 35,
+                              color: Color.fromRGBO(213, 0, 0, 1),
+                              child: new Text('Se déconnecter',
+                                  style: new TextStyle(fontSize: 16.0, color: Colors.white)),
+                              onPressed: () {
+                                Global.user = null;
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MyApp()), (Route<dynamic> route) => false);
+                              }
+                          )
                       )
-                    )
                   )
-              ),
-            ]
+              )
+            ],
+          )
         )
-      )
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:miaged/MainContainer.dart';
+import 'package:status_alert/status_alert.dart';
 
 import 'Article.dart';
 import 'Global.dart';
@@ -9,8 +10,9 @@ import 'User.dart';
 
 
 class ArticleDetails extends StatefulWidget{
-  ArticleDetails(this.article);
+  ArticleDetails(this.article, this.callbackAdd);
   final Article article;
+  Function(Article) callbackAdd;
 
   int _currentIndex = 0;
   List cardList = [];
@@ -133,7 +135,15 @@ class ArticleDetailsState extends State<ArticleDetails> {
                               fontSize: 20.0, color: Colors.white)),
                       onPressed: () async {
                         await addToBasket(Global.user, widget.article);
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
+                        StatusAlert.show(
+                          context,
+                          duration: Duration(seconds: 2),
+                          title: 'Ajouté avec succès',
+                          configuration: IconConfiguration(icon: Icons.done),
+                        );
+                        //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
+                        widget.callbackAdd(widget.article);
+                        Navigator.pop(context);
                       }
                   ))
             ],

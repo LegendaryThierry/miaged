@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:miaged/ProfileTab.dart';
 import 'package:miaged/main.dart';
 import 'Article.dart';
 import 'Global.dart';
+import 'NewPost.dart';
 import 'User.dart';
 
 class MainContainer extends StatefulWidget {
@@ -37,6 +39,7 @@ class MainContainerState extends State<MainContainer>{
   }
 
   Future<bool> task;
+  Future<CameraDescription> camera;
   @override
   void initState() {
     super.initState();
@@ -51,13 +54,29 @@ class MainContainerState extends State<MainContainer>{
     });
   }
 
+  callbackAdd(article){
+    setState(() {
+      widget.basket.add(article);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Scaffold display(){
-      List<Widget> tabs = [AccueilTab(widget.articles), BasketTab(widget.basket, callback), ProfileTab()];
+      List<Widget> tabs = [AccueilTab(widget.articles, callbackAdd), BasketTab(widget.basket, callback), ProfileTab()];
 
       return Scaffold(
           body: Center(child: tabs[widget.bottomNavigationBarItemIndex]),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewPost())
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green,
+          ),
           bottomNavigationBar: _bottomNavigationBar(widget.basket.length)
       );
     }
@@ -136,7 +155,7 @@ Future<List<Article>> getArticles() async {
         }
       }
 
-      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], urls));
+      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], urls, doc["category"]));
     })
   });
 
