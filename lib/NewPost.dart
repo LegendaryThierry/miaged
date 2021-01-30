@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:miaged/Global.dart';
 import 'package:miaged/MainContainer.dart';
 import 'package:miaged/TakePictureScreen.dart';
@@ -67,9 +68,44 @@ class NewPostState extends State<NewPost> {
       await _storage.ref("$fileName").putFile(_imageFile);
       String imageURL = await _storage.ref("$fileName").getDownloadURL();
       await createPostInFirebase(category, price, seller, size, title, imageURL);
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
+      showDialog(
+          context: context,
+          builder: (_) => NetworkGiffyDialog(
+              key: Key("NetworkDialog"),
+              image: Image.network(
+                "https://i.giphy.com/media/o75ajIFH0QnQC3nCeD/source.gif",
+                fit: BoxFit.cover,
+              ),
+              entryAnimation: EntryAnimation.DEFAULT,
+              title: Text(
+                "Annonce publiée avec succès",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 22.0, fontWeight: FontWeight.w600
+                ),
+              ),
+              description: Text(
+                  "L'article a été mis en vente",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20.0, fontWeight: FontWeight.w600
+                  )
+              ),
+              onlyOkButton: true,
+              buttonOkText: Text(
+                  "Ok",
+                  style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 1)
+                  )
+              ),
+              onOkButtonPressed: () => {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false)
+              },
+          ));
     } on FirebaseException catch (e) {
-      print("ERREUR");
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("Une erreur est survenue lors de la publication de l'annonce")
+      ));
     }
   }
 
