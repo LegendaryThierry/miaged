@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'Article.dart';
 import 'ArticleDetails.dart';
-import 'MainContainer.dart';
-import 'User.dart';
 
+//Widget en forme de carte permettant d'afficher un article en vente
 class ArticleCard extends StatelessWidget{
   ArticleCard(this.article, this.callbackAdd);
   final Article article;
@@ -13,7 +12,7 @@ class ArticleCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return GestureDetector( //GestureDetector permet de créer un widget personnalisé et de gérer les évènements de ce widget
         onTap: () {
           Navigator.push(
               context,

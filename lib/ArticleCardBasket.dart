@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:miaged/BasketTab.dart';
 
 import 'Article.dart';
-import 'ArticleDetails.dart';
-import 'Global.dart';
 
+//Widget en forme de carte permettant d'afficher un article du panier.
+//A la différence d'ArticleCard, lorsque l'utilisateur appuie sur la carte, il n'est pas dirigé vers les détails de l'article
 class ArticleCardBasket extends StatelessWidget{
   ArticleCardBasket(this.article);
   final Article article;

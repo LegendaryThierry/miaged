@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'Article.dart';
 import 'ArticleCard.dart';
 
+//Ecran affichant les articles en vente
 class AccueilTab extends StatefulWidget {
   AccueilTab(this.articles, this.callbackAdd);
   List<Article> articles;
@@ -16,14 +17,16 @@ class AccueilTab extends StatefulWidget {
 }
 
 class AccueilTabState extends State<AccueilTab> {
-  List<Article> maillots = new List<Article>();
-  List<Article> montres = new List<Article>();
+  List<Article> maillots = new List<Article>(); //Liste des articles de la catégorie : Maillot
+  List<Article> montres = new List<Article>(); //Liste des articles de la catégorie : Montre
 
+  //De base, les articles sont triés par prix décroissant
   @override
   void initState(){
     widget.articles.sort((b, a) => a.price.compareTo(b.price));
   }
 
+  //Tri des articles dans la bonne catégorie
   @override
   Widget build(BuildContext context) {
     maillots.clear();
@@ -50,7 +53,7 @@ class AccueilTabState extends State<AccueilTab> {
               ]
             ),
             title: Text("MIAGED"),
-            actions: <Widget>[ widget.descPrice == false ?
+            actions: <Widget>[ widget.descPrice == false ? //Tri des articles en fonction du mode (prix croissant ou décroissant) choisi par l'utilisateur
               FlatButton.icon(
                 textColor: Colors.white,
                 onPressed: () {
@@ -60,7 +63,7 @@ class AccueilTabState extends State<AccueilTab> {
 
                   });
                 },
-                label: Text("Trie par prix croissant"),
+                label: Text("Tri par prix croissant"),
                 icon: Icon(Icons.arrow_upward)
               ) :
               FlatButton.icon(
@@ -72,12 +75,12 @@ class AccueilTabState extends State<AccueilTab> {
 
                     });
                   },
-                  label: Text("Trie par prix décroissant"),
+                  label: Text("Tri par prix décroissant"),
                   icon: Icon(Icons.arrow_downward)
               )
             ],
           ),
-          body: TabBarView(
+          body: TabBarView( //Chaque onglet contient une grille correspondant aux articles associés à la catégorie
             children: [
               GridView.count(
                 childAspectRatio: (200 / 350),

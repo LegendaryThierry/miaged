@@ -1,3 +1,4 @@
+//Classe représentant un article
 class Article{
   String id;
   String title;

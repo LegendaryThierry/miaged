@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 import 'Global.dart';
 import 'MainContainer.dart';
@@ -11,15 +12,56 @@ import 'Article.dart';
 import 'User.dart';
 import 'SignUp.dart';
 
-List<Article> articles = [];
-List<Article> basket = [];
+//Les différentes clés disponibles pour l'Alert Dialog
+const List<Key> keys = [
+  Key("Network"),
+  Key("NetworkDialog"),
+  Key("Flare"),
+  Key("FlareDialog"),
+  Key("Asset"),
+  Key("AssetDialog")
+];
+List<Article> articles = []; //Liste de tous les articles en vente
+List<Article> basket = []; //Liste du panier de l'utilisateur
 
+//Fonction principale appelée lors du lancement de l'application
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(new MaterialApp(
+    home: new OpenApp(),
+  ));
 }
 
+//----- Splash Screen de chargement de l'application -----//
+class OpenApp extends StatefulWidget {
+  @override
+  OpenAppState createState() => new OpenAppState();
+}
+
+class OpenAppState extends State<OpenApp> {
+  @override
+  Widget build(BuildContext context) {
+    return new SplashScreen(
+        seconds: 5,
+        navigateAfterSeconds: new MyApp(),
+        title: new Text("Trouvez des produits d'exception",
+          style: new TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22.0,
+            color: Color.fromRGBO(136, 109, 54, 1)
+          ),),
+        image: new Image.network('https://firebasestorage.googleapis.com/v0/b/vinted-869ac.appspot.com/o/logo.PNG?alt=media&token=afb6eef5-f542-4426-8870-c4926d5489f2'),
+        backgroundColor: Color.fromRGBO(19, 50, 70, 1),
+        styleTextUnderTheLoader: new TextStyle(),
+        photoSize: 150.0,
+        onClick: ()=>{},
+        loaderColor: Colors.white
+    );
+  }
+}
+
+//----- Ecran de connexion -----//
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -56,26 +98,18 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-const List<Key> keys = [
-  Key("Network"),
-  Key("NetworkDialog"),
-  Key("Flare"),
-  Key("FlareDialog"),
-  Key("Asset"),
-  Key("AssetDialog")
-];
-
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController loginController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
+  //Fonction pour tester si les informations de connexion entrées par l'utilisateur correspondent à un utilisateur inscrit ou pas
   void login() {
     FirebaseFirestore.instance.collection("users")
         .where("login", isEqualTo: loginController.text)
         .where("password", isEqualTo: passwordController.text)
         .get()
         .then((value){
-          if(value.size == 1){
+          if(value.size == 1){ //Les informations de connexion sont correctes
             List<QueryDocumentSnapshot> docs = value.docs;
             Global.user = new User(docs[0].id, docs[0]["login"], docs[0]["password"], docs[0]["birthday"], docs[0]["address"], docs[0]["postalCode"], docs[0]["city"], docs[0]["backgroundImage"]);
             Navigator.push(
@@ -83,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MaterialPageRoute(builder: (context) => MainContainer(Global.user)),
             );
           }
-          else{
+          else{ //Les informations de connexion sont incorrectes
             showDialog(
                 context: context,
                 builder: (_) => NetworkGiffyDialog(
@@ -141,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
+              Container( //--- Logo ---
                   margin: const EdgeInsets.only(top: 100.0, bottom: 10),
                   child: RichText(
                     text: new TextSpan(
@@ -163,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   )
               ),
-              SizedBox(
+              SizedBox( //--- Texte animé ---
                 width: 300.0,
                 height: 75.0,
                 child: TypewriterAnimatedTextKit(
@@ -174,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       "Prêt à faire du tri dans vos placards ?",
                       "Prêt à donner une seconde vie à vos produits ?",
                       "Prêt à gagner de l'argent ?",
-                      "MIAGED le bon coin de l'élite"
+                      "MIAGED le Bon Coin de l'élite"
                     ],
                     textStyle: TextStyle(
                         fontSize: 22.0,
@@ -240,17 +274,4 @@ class _MyHomePageState extends State<MyHomePage> {
       )
     );
   }
-}
-
-void createArticle(Article article) {
-  FirebaseFirestore.instance.collection("articles")
-      .add({
-        "title": article.title,
-        "seller": article.seller,
-        "price": article.price,
-        "size": article.size,
-        "url1": article.urls[0]
-      })
-      .then((value) => print("User Added"))
-      .catchError((error) => print("Failed to add user: $error"));
 }

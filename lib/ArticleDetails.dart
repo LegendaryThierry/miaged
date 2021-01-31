@@ -8,7 +8,7 @@ import 'Article.dart';
 import 'Global.dart';
 import 'User.dart';
 
-
+//Ecran affichant les détails d'un article
 class ArticleDetails extends StatefulWidget{
   ArticleDetails(this.article, this.callbackAdd);
   final Article article;
@@ -62,7 +62,7 @@ class ArticleDetailsState extends State<ArticleDetails> {
                   style: new TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold)
               ),
-              CarouselSlider(
+              CarouselSlider( //--- Diaporama ---
                 options: CarouselOptions(
                   height: 400.0,
                   autoPlay: widget.cardList.length > 1 ? true : false,
@@ -100,7 +100,7 @@ class ArticleDetailsState extends State<ArticleDetails> {
                   );
                 }).toList(),
               ),
-              Row( //LIGNE DE POINTS
+              Row( //--- Ligne de points bleus pour le diaporama ---
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: map<Widget>(widget.cardList, (index, url) {
                   return Container(
@@ -135,7 +135,7 @@ class ArticleDetailsState extends State<ArticleDetails> {
                               fontSize: 20.0, color: Colors.white)),
                       onPressed: () async {
                         await addToBasket(Global.user, widget.article);
-                        StatusAlert.show(
+                        StatusAlert.show( //Affichage d'un message de succès lorsque l'article a été ajouté au panier
                           context,
                           duration: Duration(seconds: 2),
                           title: 'Ajouté avec succès',
@@ -152,6 +152,7 @@ class ArticleDetailsState extends State<ArticleDetails> {
     );
   }
 
+  //Fonction permettant d'ajouter un article au panier de l'utilisateur dans la base Firebase
   Future<void> addToBasket(User user, Article article) async {
     await FirebaseFirestore.instance.collection("baskets")
         .add({
