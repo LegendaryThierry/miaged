@@ -8,6 +8,7 @@ import 'package:miaged/main.dart';
 import 'ArticleCard.dart';
 import 'Global.dart';
 
+//Widget gérant le panier de l'utilisateur
 class BasketTab extends StatefulWidget {
   BasketTab(this.basket, this.callback);
   final List<Article> basket;
@@ -33,7 +34,7 @@ class BasketTabState extends State<BasketTab>{
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text("Prix total du panier: " + totalPrice.toStringAsFixed(2) + " €", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)),
-            Expanded(
+            Expanded( //Affichage du panier de l'utilisateur
               child: GridView.count(
                 childAspectRatio: (200 / 390),
                 // Create a grid with 2 columns. If you change the scrollDirection to
@@ -73,6 +74,7 @@ class BasketTabState extends State<BasketTab>{
     );
   }
 
+  //Fonction pour supprimer un article du panier
   void deleteArticleFromBasket(Article article) async{
     await FirebaseFirestore.instance.collection("baskets")
         .where("articleID", isEqualTo: article.id)

@@ -1,3 +1,4 @@
+//Classe pour représenter un utilisateur
 class User{
   String id;
   String login;

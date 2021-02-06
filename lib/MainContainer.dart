@@ -12,6 +12,7 @@ import 'Global.dart';
 import 'NewPost.dart';
 import 'User.dart';
 
+//Widget pour afficher les articles en vente
 class MainContainer extends StatefulWidget {
   MainContainer(this.user);
   User user;
@@ -129,6 +130,7 @@ class MainContainerState extends State<MainContainer>{
     );
   }
 
+  //Fonction modifiant la vue pour afficher l'onglet choisi par l'utilisateur
   void _onItemTapped(int index) {
     setState(() {
       widget.bottomNavigationBarItemIndex = index;
@@ -136,6 +138,7 @@ class MainContainerState extends State<MainContainer>{
   }
 }
 
+//Récupération des articles en ventes
 Future<List<Article>> getArticles() async {
   print("----- GET ARTICLES ------");
   List<Article> articles = new List<Article>();
@@ -155,7 +158,8 @@ Future<List<Article>> getArticles() async {
         }
       }
 
-      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], urls, doc["category"]));
+      print(doc["title"]);
+      articles.add(new Article(doc.id, doc["title"], doc["seller"], doc["price"].toDouble(), doc["size"], urls, doc["category"], doc["rating"].toDouble()));
     })
   });
 
@@ -163,6 +167,7 @@ Future<List<Article>> getArticles() async {
   return articles;
 }
 
+//Récupération du panier de l'utilisateur
 Future<List<Article>> getBasket(User user, List<Article> articles) async {
   List<String> articlesIDs = new List<String>();
   List<Article> basket = new List<Article>();

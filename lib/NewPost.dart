@@ -12,8 +12,9 @@ import 'package:miaged/MainContainer.dart';
 import 'package:miaged/TakePictureScreen.dart';
 import 'package:path/path.dart' show basename, join;
 import 'package:path_provider/path_provider.dart';
+import 'package:status_alert/status_alert.dart';
 
-// A screen that allows users to take a picture using a given camera.
+//Widget pour publier une nouvelle annonce
 class NewPost extends StatefulWidget {
   CameraDescription camera;
 
@@ -44,6 +45,7 @@ class NewPostState extends State<NewPost> {
     );
   }
 
+  //Fonction d'ajout des données de la nouvelle annonce dans la base de données Firebase
   Future<void> createPostInFirebase(String category, double price, String seller, String size, String title, String url1) async {
 
     await FirebaseFirestore.instance.collection("articles")
@@ -53,55 +55,30 @@ class NewPostState extends State<NewPost> {
           "seller": seller,
           "size": size,
           "title": title,
-          "url1": url1
+          "url1": url1,
+          "rating": -1.0
         })
         .then((value) => print("SUCCESS"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
+  //Fonction de création de la nouvelle annonce avec enregistrement des données dans Firebase et de la photo dans Firestore
   Future<void> createPost(String category, double price, String seller, String size, String title) async {
     FirebaseStorage _storage = FirebaseStorage.instance;
     String fileName = basename(_imagePath);
     File _imageFile = File(_imagePath);
 
     try {
-      await _storage.ref("$fileName").putFile(_imageFile);
-      String imageURL = await _storage.ref("$fileName").getDownloadURL();
-      await createPostInFirebase(category, price, seller, size, title, imageURL);
-      showDialog(
-          context: context,
-          builder: (_) => NetworkGiffyDialog(
-              key: Key("NetworkDialog"),
-              image: Image.network(
-                "https://i.giphy.com/media/o75ajIFH0QnQC3nCeD/source.gif",
-                fit: BoxFit.cover,
-              ),
-              entryAnimation: EntryAnimation.DEFAULT,
-              title: Text(
-                "Annonce publiée avec succès",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 22.0, fontWeight: FontWeight.w600
-                ),
-              ),
-              description: Text(
-                  "L'article a été mis en vente",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 20.0, fontWeight: FontWeight.w600
-                  )
-              ),
-              onlyOkButton: true,
-              buttonOkText: Text(
-                  "Ok",
-                  style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 1)
-                  )
-              ),
-              onOkButtonPressed: () => {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false)
-              },
-          ));
+      await _storage.ref("$fileName").putFile(_imageFile); //Upload de la photo dans Firestore
+      String imageURL = await _storage.ref("$fileName").getDownloadURL(); //Récupération de l'URL de la photo généré par Firestore
+      await createPostInFirebase(category, price, seller, size, title, imageURL); //Création de l'annonce dans Firebase
+      StatusAlert.show( //Affichage d'un message de succès lorsque l'annonce a été publié
+        context,
+        duration: Duration(seconds: 2),
+        title: 'Publié avec succès',
+        configuration: IconConfiguration(icon: Icons.done),
+      );
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
     } on FirebaseException catch (e) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Une erreur est survenue lors de la publication de l'annonce")

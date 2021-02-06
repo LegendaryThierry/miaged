@@ -112,10 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if(value.size == 1){ //Les informations de connexion sont correctes
             List<QueryDocumentSnapshot> docs = value.docs;
             Global.user = new User(docs[0].id, docs[0]["login"], docs[0]["password"], docs[0]["birthday"], docs[0]["address"], docs[0]["postalCode"], docs[0]["city"], docs[0]["backgroundImage"]);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainContainer(Global.user)),
-            );
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
           }
           else{ //Les informations de connexion sont incorrectes
             showDialog(

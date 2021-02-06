@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:miaged/MainContainer.dart';
 import 'package:status_alert/status_alert.dart';
 
@@ -50,104 +51,117 @@ class ArticleDetailsState extends State<ArticleDetails> {
         appBar: AppBar(
             title: Text("MIAGED")
         ),
-        body: Container(
-          margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            children: <Widget>[
-              Text(
-                  widget.article.title,
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      fontSize: 25, fontWeight: FontWeight.bold)
-              ),
-              CarouselSlider( //--- Diaporama ---
-                options: CarouselOptions(
-                  height: 400.0,
-                  autoPlay: widget.cardList.length > 1 ? true : false,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  pauseAutoPlayOnTouch: true,
-                  aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    //widget._currentIndex = index;
-                    //print(index);
-                    setState(() {
-                      widget._currentIndex = index;
-                    });
-                  },
+        body: SingleChildScrollView(
+          child: Container(
+            height: (MediaQuery.of(context).size.height/100) * 80,
+            margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: Column(
+              children: <Widget>[
+                Text(
+                    widget.article.title,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold)
                 ),
-                items: widget.cardList.map((card) {
-                  return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.30,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          child: Card(
-                            color: Colors.blueAccent,
-                            child: card,
-                          ),
-                        );
-                      }
-                  );
-                }).toList(),
-              ),
-              Row( //--- Ligne de points bleus pour le diaporama ---
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: map<Widget>(widget.cardList, (index, url) {
-                  return Container(
-                    width: 10.0,
-                    height: 10.0,
-                    margin: EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: widget._currentIndex == index ? Colors.blueAccent : Colors.grey,
-                    ),
-                  );
-                }),
-              ),
-              Text(
-                  widget.article.size + " - " + widget.article.seller,
-                  style: new TextStyle(fontSize: 16.0,)
-              ),
-              Text(
-                  widget.article.price.toString() + " €",
-                  style: new TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold)
-              ),
-              Spacer(),
-              new Container(
-                  child: MaterialButton(
-                      minWidth: double.infinity,
-                      height: 50,
-                      color: Color.fromRGBO(9, 177, 186, 1),
-                      child: new Text('Ajouter au panier',
-                          style: new TextStyle(
-                              fontSize: 20.0, color: Colors.white)),
-                      onPressed: () async {
-                        await addToBasket(Global.user, widget.article);
-                        StatusAlert.show( //Affichage d'un message de succès lorsque l'article a été ajouté au panier
-                          context,
-                          duration: Duration(seconds: 2),
-                          title: 'Ajouté avec succès',
-                          configuration: IconConfiguration(icon: Icons.done),
-                        );
-                        //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
-                        widget.callbackAdd(widget.article);
-                        Navigator.pop(context);
-                      }
-                  ))
-            ],
-          ),
+                CarouselSlider( //--- Diaporama ---
+                  options: CarouselOptions(
+                    height: 400.0,
+                    autoPlay: widget.cardList.length > 1 ? true : false,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnTouch: true,
+                    aspectRatio: 2.0,
+                    onPageChanged: (index, reason) {
+                      //widget._currentIndex = index;
+                      //print(index);
+                      setState(() {
+                        widget._currentIndex = index;
+                      });
+                    },
+                  ),
+                  items: widget.cardList.map((card) {
+                    return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height * 0.30,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
+                            child: Card(
+                              color: Colors.blueAccent,
+                              child: card,
+                            ),
+                          );
+                        }
+                    );
+                  }).toList(),
+                ),
+                Row( //--- Ligne de points bleus pour le diaporama ---
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: map<Widget>(widget.cardList, (index, url) {
+                    return Container(
+                      width: 10.0,
+                      height: 10.0,
+                      margin: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: widget._currentIndex == index ? Colors.blueAccent : Colors.grey,
+                      ),
+                    );
+                  }),
+                ),
+                Text(
+                    widget.article.size + " - " + widget.article.seller,
+                    style: new TextStyle(fontSize: 16.0,)
+                ),
+                Text(
+                    widget.article.price.toString() + " €",
+                    style: new TextStyle(
+                        fontSize: 16.0, fontWeight: FontWeight.bold)
+                ),
+                widget.article.rating >= 0 ? RatingBarIndicator(
+                  rating: widget.article.rating,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  itemCount: 5,
+                  itemSize: 20.0,
+                  direction: Axis.horizontal,
+                ) : Text(""),
+                Spacer(),
+                new Container(
+                    child: MaterialButton(
+                        minWidth: double.infinity,
+                        height: 50,
+                        color: Color.fromRGBO(9, 177, 186, 1),
+                        child: new Text('Ajouter au panier',
+                            style: new TextStyle(
+                                fontSize: 20.0, color: Colors.white)),
+                        onPressed: () async {
+                          await addToBasket(Global.user, widget.article);
+                          StatusAlert.show( //Affichage d'un message de succès lorsque l'article a été ajouté au panier
+                            context,
+                            duration: Duration(seconds: 2),
+                            title: 'Ajouté avec succès',
+                            configuration: IconConfiguration(icon: Icons.done),
+                          );
+                          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainContainer(Global.user)), (Route<dynamic> route) => false);
+                          widget.callbackAdd(widget.article);
+                          Navigator.pop(context);
+                        }
+                    ))
+              ],
+            ),
+          )
         )
     );
   }

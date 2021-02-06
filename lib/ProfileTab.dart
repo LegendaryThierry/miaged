@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'Global.dart';
 import 'main.dart';
 
+//Widget pour gérer les informations du profil de l'utilisateur
 class ProfileTab extends StatefulWidget{
   DateTime selectedDate = DateTime.now();
 
@@ -38,6 +39,7 @@ class ProfileTabState extends State<ProfileTab>{
 
   @override
   Widget build(BuildContext context) {
+    //Fonction de mise à jour des données
     void updateUserData(String login, String password, String birthday, String address, String postalCode, String city) async{
       DocumentReference documentReference = FirebaseFirestore.instance.collection("users").doc(Global.user.id);
 
@@ -62,6 +64,7 @@ class ProfileTabState extends State<ProfileTab>{
       );
     }
 
+    //Affichage d'un calendrier pour que l'utilisateur puisse choisir sa date de naissance
     Future<void> datePicker() async{
       final DateTime picked  = await showDatePicker(
         context: context,

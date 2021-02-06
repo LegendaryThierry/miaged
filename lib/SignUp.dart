@@ -8,6 +8,7 @@ import 'Global.dart';
 import 'User.dart';
 import 'main.dart';
 
+//Widget pour gérer l'inscription d'un nouvel utilisateur
 class SignUp extends StatefulWidget{
   DateTime selectedDate = DateTime.now();
 
@@ -44,6 +45,7 @@ class SignUpState extends State<SignUp> {
       }
     }
 
+    //Fonction de création d'un nouvel utilisateur dans la base de données Firebase
     Future<String> createUser(String login, String password, String birthday, String address, String zipCode, String city) async {
       String userID = "";
 

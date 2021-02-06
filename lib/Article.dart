@@ -7,6 +7,7 @@ class Article{
   String size;
   List<String> urls;
   String category;
+  double rating;
 
-  Article(this.id, this.title, this.seller, this.price, this.size, this.urls, this.category);
+  Article(this.id, this.title, this.seller, this.price, this.size, this.urls, this.category, this.rating);
 }
