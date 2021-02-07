@@ -41,6 +41,7 @@ class ProfileTabState extends State<ProfileTab>{
   Widget build(BuildContext context) {
     //Fonction de mise à jour des données
     void updateUserData(String login, String password, String birthday, String address, String postalCode, String city) async{
+      //Récupération dans Firebase du Document contenant les informations de l'utilisateur
       DocumentReference documentReference = FirebaseFirestore.instance.collection("users").doc(Global.user.id);
 
       Map<String, dynamic> userData = {
@@ -52,7 +53,8 @@ class ProfileTabState extends State<ProfileTab>{
         "city": city
       };
 
-      await documentReference.set(userData).whenComplete(() => {
+      //SetOptions(merge: true) permet de surcharger uniquement les valeurs définies dans userData
+      await documentReference.set(userData, SetOptions(merge: true)).whenComplete(() => {
             Scaffold.of(context).showSnackBar(SnackBar(content: Text('Les modifications ont été sauvegardé avec succès'))),
             Global.user.login = login,
             Global.user.password = password,
@@ -114,7 +116,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                         TextFormField(
@@ -130,7 +132,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                         TextFormField(
@@ -149,7 +151,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                         TextFormField(
@@ -164,7 +166,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                         TextFormField(
@@ -180,7 +182,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                         TextFormField(
@@ -195,7 +197,7 @@ class ProfileTabState extends State<ProfileTab>{
                             // code when the user saves the form.
                           },
                           validator: (String value) {
-                            return value.contains('@') ? 'Do not use the @ char.' : null;
+                            return value == "" ? "Ce champs ne peut pas être vide" : null;
                           },
                         ),
                       ]
