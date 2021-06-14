@@ -21,4 +21,4 @@ Fonctionnalités Additionnelles :
  - Affichage d'une alerte lors de l'ajout d'un article au panier et lors de la création d'une nouvelle annonce
  - Affichage dynamique du nombre d'article dans le panier
 
-**Thierry TSANG - 07/02/2021 - Groupe STUDIEL**
+**Thierry TSANG - 07/02/2021**
